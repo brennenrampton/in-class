@@ -39,6 +39,24 @@ getJSON('story.json').then(function(story) {
   console.log("Got chapter 1!", chapter1);
 });
 
+var storyPromise;
+
+function getChapter(i) {
+  storyPromise = storyPromise || getJSON('story.json');
+
+  return storyPromise.then(function(story) {
+    return getJSON(story.chapterUrls[i]);
+  })
+}
+
+// and using it is simple:
+getChapter(0).then(function(chapter) {
+  console.log(chapter);
+  return getChapter(1);
+}).then(function(chapter) {
+  addHtmlToPage(chapter.html);
+});
+
 //These are the functions that we'll use later on to interact with the HTML page
 //
 function addHtmlToPage(content) {
